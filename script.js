@@ -1,7 +1,9 @@
 // SERVER_URL   http://75.101.248.50:8000
+// const SERVER_URL='http://75.101.248.50:8000';
+const SERVER_URL='https://intelmaasapi.kneotech.cloud';
 class IntelMaaSChat {
     constructor() {
-        this.apiBaseUrl = 'http://75.101.248.50:8000';
+        this.apiBaseUrl = SERVER_URL;
         this.selectedModel = null;
         this.models = [];
         this.isStreaming = false;
@@ -729,7 +731,7 @@ class IntelMaaSChat {
 
     getDefaultSettings() {
         return {
-            apiBaseUrl: 'http://75.101.248.50:8000',
+            apiBaseUrl: SERVER_URL,
             autoScroll: true,
             showTimestamps: true,
             showMetrics: true
