@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel MaaS Chat Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container" id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-microchip"></i>
+                    <h1>Intel MaaS Chat</h1>
+                </div>
+                <div class="header-controls">
+                    <div class="status-indicator" id="statusIndicator">
+                        <i class="fas fa-circle"></i>
+                        <span id="statusText">Connecting...</span>
+                    </div>
+                    <button class="btn-icon" id="settingsBtn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="btn-icon" id="clearBtn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-robot"></i> Models</h3>
+                    <button class="btn-icon" id="refreshModelsBtn" title="Refresh Models">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="models-list" id="modelsList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Loading models...</span>
+                    </div>
+                </div>
+
+                <div class="model-info" id="modelInfo">
+                    <h4>Selected Model</h4>
+                    <div class="model-details" id="modelDetails">
+                        <p>No model selected</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="stats" id="stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Messages:</span>
+                            <span class="stat-value" id="messageCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tokens:</span>
+                            <span class="stat-value" id="tokenCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Uptime:</span>
+                            <span class="stat-value" id="uptime">0s</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <div class="welcome-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h2>Welcome to Intel MaaS Chat</h2>
+                        <p>Select a model from the sidebar and start chatting with AI powered by Intel's Model as a Service platform.</p>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Real-time streaming responses</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-brain"></i>
+                                <span>Multiple AI models available</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Performance metrics tracking</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Input Area -->
+                <div class="chat-input-container" id="chatInputContainer">
+                    <!-- Collapsible Toolbar -->
+                    <div class="input-toolbar" id="inputToolbar">
+                        <div class="toolbar-section">
+                            <div class="model-selector">
+                                <label for="quickModelSelect">Model:</label>
+                                <select id="quickModelSelect">
+                                    <option value="">Select Model...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="toolbar-section">
+                            <div class="input-controls">
+                                <div class="control-group">
+                                    <label for="maxTokens">Max Tokens:</label>
+                                    <input type="number" id="maxTokens" value="250" min="1" max="4000" step="1">
+                                </div>
+                                <div class="control-group">
+                                    <label for="temperature">Temperature:</label>
+                                    <input type="range" id="temperature" value="0.7" min="0" max="2" step="0.1">
+                                    <span class="range-value" id="temperatureValue">0.7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="toolbar-actions">
+                            <button class="btn-icon" id="toggleToolbarBtn" title="Collapse/Expand">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Input Area -->
+                    <div class="chat-input-wrapper">
+                        <div class="input-container">
+                            <!-- Enhanced Textarea with Dynamic Resize -->
+                            <div class="textarea-container">
+                                <textarea 
+                                    id="messageInput" 
+                                    placeholder="Type your message here..."
+                                    rows="1"
+                                    maxlength="10000"
+                                ></textarea>
+                                <div class="textarea-actions">
+                                    <button class="btn-icon" id="attachBtn" title="Attach File (Coming Soon)" disabled>
+                                        <i class="fas fa-paperclip"></i>
+                                    </button>
+                                    <button class="btn-icon" id="micBtn" title="Voice Input (Coming Soon)" disabled>
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Send Button -->
+                            <button id="sendBtn" class="send-btn" title="Send Message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                        <!-- Input Footer with Character Count and Shortcuts -->
+                        <div class="input-footer">
+                            <div class="input-info">
+                                <span class="char-count">
+                                    <span id="charCount">0</span>/<span id="maxChars">10000</span>
+                                </span>
+                                <span class="shortcuts-hint">
+                                    <kbd>Enter</kbd> to send • <kbd>Shift + Enter</kbd> for new line
+                                </span>
+                            </div>
+                            <div class="input-status" id="inputStatus">
+                                <span class="status-text">Ready to chat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-cog"></i> Settings</h3>
+                    <button class="btn-icon close-modal" id="closeSettingsBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label for="apiBaseUrl">API Base URL:</label>
+                        <input type="text" id="apiBaseUrl" value="http://75.101.248.50:8000">
+                    </div>
+                    <div class="setting-group">
+                        <label for="autoScroll">Auto-scroll to new messages:</label>
+                        <input type="checkbox" id="autoScroll" checked>
+                    </div>
+                    <div class="setting-group">
+                        <label for="showTimestamps">Show timestamps:</label>
+                        <input type="checkbox" id="showTimestamps" checked>
+                    </div>
+                    <div class="setting-group">
+                        <label for="showMetrics">Show performance metrics:</label>
+                        <input type="checkbox" id="showMetrics" checked>
+                    </div>
+                    <div class="setting-group">
+                        <label for="enableSoundEffects">Sound effects:</label>
+                        <input type="checkbox" id="enableSoundEffects">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="resetSettingsBtn">Reset to Defaults</button>
+                    <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner large">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p id="loadingText">Initializing...</p>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
